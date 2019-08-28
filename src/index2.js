@@ -15,7 +15,7 @@ const POW_TARGET = 2;
     // TODO: Web3 connection
     const web3 = new Web3();
     try {
-        web3.setProvider(new Web3.providers.WebsocketProvider("ws://localhost:8546", { headers: { Origin: "mychat" } }));
+        web3.setProvider(new Web3.providers.WebsocketProvider("ws://localhost:8548", { headers: { Origin: "mychat2" } }));
         await web3.eth.net.isListening();
     } catch (err) {
         process.exit();
@@ -28,7 +28,7 @@ const POW_TARGET = 2;
 
     // TODO: Obtain public key
     const pubKey = await web3.shh.getPublicKey(keyPair);
-    fs.writeFile('pubKey1.txt', pubKey, (err) => {
+    fs.writeFile('pubKey2.txt', pubKey, (err) => {
         if (err) console.log(err);
     })
 

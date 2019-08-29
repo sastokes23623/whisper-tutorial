@@ -5,17 +5,17 @@ const fs = require('fs');
 // Useful constants
 const DEFAULT_CHANNEL = "default";
 const DEFAULT_TOPIC = "0x11223344";
-const PRIVATE_MESSAGE_REGEX = /^\/msg (0x[A-Za-z0-9]{130}) (.*)$/;
+const PRIVATE_MESSAGE_REGEX = /^\/priv (0x[A-Za-z0-9]{130}) (.*)$/;
 
 const POW_TIME = 100;
 const TTL = 20;
 const POW_TARGET = 2;
 
 (async () => {
-    // TODO: Web3 connection
+    // Establish Web3 connection
     const web3 = new Web3();
     try {
-        web3.setProvider(new Web3.providers.WebsocketProvider("ws://localhost:8546", { headers: { Origin: "mychat" } }));
+        web3.setProvider(new Web3.providers.WebsocketProvider("ws://localhost:8546", { headers: { Origin: "mychat2" } }));
         await web3.eth.net.isListening();
     } catch (err) {
         process.exit();
@@ -23,10 +23,10 @@ const POW_TARGET = 2;
 
     const ui = new UI();
 
-    // TODO: Generate keypair
+    // Generate keypair
     const keyPair = await web3.shh.newKeyPair();
 
-    // TODO: Obtain public key
+    // Obtain public key
     const pubKey = await web3.shh.getPublicKey(keyPair);
     fs.writeFile('pubKey1.txt', pubKey, (err) => {
         if (err) console.log(err);
@@ -34,14 +34,14 @@ const POW_TARGET = 2;
 
     ui.setUserPublicKey(pubKey);
 
-    // TODO: Generate a symmetric key
+    // Generate a symmetric key
     const channelSymKey = await web3.shh.generateSymKeyFromPassword(DEFAULT_CHANNEL);
 
     const channelTopic = DEFAULT_TOPIC;
 
     ui.events.on('cmd', async (message) => {
         try {
-            if (message.startsWith('/msg')) {
+            if (message.startsWith('/priv')) {
                 if (PRIVATE_MESSAGE_REGEX.test(message)) {
                     const msgParts = message.match(PRIVATE_MESSAGE_REGEX);
                     const contactCode = msgParts[1];
